@@ -24,21 +24,21 @@ float Fantasma::get_target_distance(unsigned char i_direction) const
 
 	switch (i_direction)
 	{
-		case 0:
-			x += VELOCIDADE_DO_FANTASMA;
-			break;
-		
-		case 1:
-			y -= VELOCIDADE_DO_FANTASMA;
-			break;
-		
-		case 2:
-			x -= VELOCIDADE_DO_FANTASMA;
-			break;
-		
-		case 3:
-			y += VELOCIDADE_DO_FANTASMA;
-			break;
+	case 0:
+		x += VELOCIDADE_DO_FANTASMA;
+		break;
+
+	case 1:
+		y -= VELOCIDADE_DO_FANTASMA;
+		break;
+
+	case 2:
+		x -= VELOCIDADE_DO_FANTASMA;
+		break;
+
+	case 3:
+		y += VELOCIDADE_DO_FANTASMA;
+		break;
 	}
 
 	return static_cast<float>(sqrt(pow(x - target.x, 2) + pow(y - target.y, 2)));
@@ -51,9 +51,9 @@ void Fantasma::draw(bool i_flash, sf::RenderWindow& i_window)
 	sf::Sprite body;
 	sf::Sprite face;
 	sf::Texture texture;
-	
+
 	texture.loadFromFile("Ghost" + std::to_string(TAMANHO_DA_CELULA) + ".png");
-	
+
 	body.setTexture(texture);
 	body.setPosition(position.x, position.y);
 	body.setTextureRect(sf::IntRect(TAMANHO_DA_CELULA * body_frame, 0, TAMANHO_DA_CELULA, TAMANHO_DA_CELULA));
@@ -65,22 +65,22 @@ void Fantasma::draw(bool i_flash, sf::RenderWindow& i_window)
 	{
 		switch (id)
 		{
-			case 0:
-				body.setColor(sf::Color(255, 0, 0));
-				break;
+		case 0:
+			body.setColor(sf::Color(255, 0, 0));
+			break;
 
-			case 1:
-				body.setColor(sf::Color(255, 182, 255));
-				break;
+		case 1:
+			body.setColor(sf::Color(255, 182, 255));
+			break;
 
-			case 2:
-				body.setColor(sf::Color(0, 255, 255));
-				break;
+		case 2:
+			body.setColor(sf::Color(0, 255, 255));
+			break;
 
-			case 3:
-				body.setColor(sf::Color(255, 182, 85));
-				break;
-		}	
+		case 3:
+			body.setColor(sf::Color(255, 182, 85));
+			break;
+		}
 
 		face.setTextureRect(sf::IntRect(TAMANHO_DA_CELULA * direction, TAMANHO_DA_CELULA, TAMANHO_DA_CELULA, TAMANHO_DA_CELULA));
 		i_window.draw(body);
@@ -233,7 +233,7 @@ void Fantasma::update(unsigned char i_level, std::array<std::array<Celula, ALTUR
 
 			if (0 < available_ways)
 			{
-				while (1 == walls[random_direction] || random_direction == (2 + direction) % 4)
+				while (walls[random_direction] || random_direction == (2 + direction) % 4)
 				{
 					random_direction = rand() % 4;
 				}
@@ -251,7 +251,7 @@ void Fantasma::update(unsigned char i_level, std::array<std::array<Celula, ALTUR
 		}
 	}
 
-	if (1 == move)
+	if (move)
 	{
 		switch (direction)
 		{
@@ -283,24 +283,23 @@ void Fantasma::update(unsigned char i_level, std::array<std::array<Celula, ALTUR
 		{
 			position.x = TAMANHO_DA_CELULA * LARGURA_DO_MAPA - speed;
 		}
-		else if (position.x >= TAMANHO_DA_CELULA * LARGURA_DO_MAPA)
+
+		if (position.x >= TAMANHO_DA_CELULA * LARGURA_DO_MAPA)
 		{
 			position.x = speed - TAMANHO_DA_CELULA;
 		}
 	}
 
-	if (1 == pacman_collision(i_pacman.get_posicao()))
+	if (pacman_collision(i_pacman.get_posicao()))
 	{
 		if (0 == frightened_mode)
 		{
 			i_pacman.set_dead(1);
 		}
-		else 
+		else
 		{
-			use_door = 1;
-
+			use_door = true;
 			frightened_mode = 2;
-
 			target = home;
 		}
 	}
@@ -308,18 +307,140 @@ void Fantasma::update(unsigned char i_level, std::array<std::array<Celula, ALTUR
 
 void Fantasma::update_target(unsigned char i_pacman_direction, const Posicao& i_ghost_0_position, const Posicao& i_pacman_position)
 {
-	if (use_door && position == target) {
-		if (home_exit == target) 
+	if (use_door && position == target)
+	{
+
+		if (home_exit == target)
 		{
 			use_door = false;
 		}
 
 		if (home == target)
 		{
-			frightened_mode = false;
-			target = home_exit; 
+			frightened_mode = 0;
+
+			target = home_exit;
 		}
 
 		return;
+	}
+
+	if (0 == movement_mode)
+	{
+		switch (id)
+		{
+		case 0:
+		{
+			target = { TAMANHO_DA_CELULA * (LARGURA_DO_MAPA - 1), 0 };
+
+			break;
+		}
+		case 1:
+		{
+			target = { 0, 0 };
+
+			break;
+		}
+		case 2:
+		{
+			target = { TAMANHO_DA_CELULA * (LARGURA_DO_MAPA - 1), TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
+
+			break;
+		}
+		case 3:
+		{
+			target = { 0, TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
+		}
+		}
+
+		return;
+	}
+
+	switch (id)
+	{
+	case 0:
+	{
+		target = i_pacman_position;
+
+		break;
+	}
+	case 1:
+	{
+		target = i_pacman_position;
+
+		switch (i_pacman_direction)
+		{
+		case 0:
+		{
+			target.x += TAMANHO_DA_CELULA * GHOST_1_CHASE;
+
+			break;
+		}
+		case 1:
+		{
+			target.y -= TAMANHO_DA_CELULA * GHOST_1_CHASE;
+
+			break;
+		}
+		case 2:
+		{
+			target.x -= TAMANHO_DA_CELULA * GHOST_1_CHASE;
+
+			break;
+		}
+		case 3:
+		{
+			target.y += TAMANHO_DA_CELULA * GHOST_1_CHASE;
+		}
+		}
+
+		break;
+	}
+	case 2:
+	{
+		target = i_pacman_position;
+
+		switch (i_pacman_direction)
+		{
+		case 0:
+		{
+			target.x += TAMANHO_DA_CELULA * GHOST_2_CHASE;
+
+			break;
+		}
+		case 1:
+		{
+			target.y -= TAMANHO_DA_CELULA * GHOST_2_CHASE;
+
+			break;
+		}
+		case 2:
+		{
+			target.x -= TAMANHO_DA_CELULA * GHOST_2_CHASE;
+
+			break;
+		}
+		case 3:
+		{
+			target.y += TAMANHO_DA_CELULA * GHOST_2_CHASE;
+		}
+		}
+
+		target.x += target.x - i_ghost_0_position.x;
+		target.y += target.y - i_ghost_0_position.y;
+
+		break;
+	}
+	case 3: 
+	{
+		if (TAMANHO_DA_CELULA * GHOST_3_CHASE <= sqrt(pow(position.x - i_pacman_position.x, 2) + pow(position.y - i_pacman_position.y, 2)))
+		{
+			target = i_pacman_position;
+		}
+		else
+		{
+			target = { 0, TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
+		}
+	}
 	}
 }
