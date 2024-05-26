@@ -307,140 +307,142 @@ void Fantasma::update(unsigned char i_level, std::array<std::array<Celula, ALTUR
 
 void Fantasma::update_target(unsigned char i_pacman_direction, const Posicao& i_ghost_0_position, const Posicao& i_pacman_position)
 {
-	if (use_door && position == target)
+	if (1 == use_door)
 	{
-
-		if (home_exit == target)
+		if (position == target)
 		{
-			use_door = false;
-		}
+			if (home_exit == target) 
+			{
+				use_door = 0;
+			}
+			else if (home == target) 
+			{
+				frightened_mode = 0; 
 
-		if (home == target)
-		{
-			frightened_mode = 0;
-
-			target = home_exit;
-		}
-
-		return;
-	}
-
-	if (0 == movement_mode)
-	{
-		switch (id)
-		{
-		case 0:
-		{
-			target = { TAMANHO_DA_CELULA * (LARGURA_DO_MAPA - 1), 0 };
-
-			break;
-		}
-		case 1:
-		{
-			target = { 0, 0 };
-
-			break;
-		}
-		case 2:
-		{
-			target = { TAMANHO_DA_CELULA * (LARGURA_DO_MAPA - 1), TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
-
-			break;
-		}
-		case 3:
-		{
-			target = { 0, TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
-		}
-		}
-
-		return;
-	}
-
-	switch (id)
-	{
-	case 0:
-	{
-		target = i_pacman_position;
-
-		break;
-	}
-	case 1:
-	{
-		target = i_pacman_position;
-
-		switch (i_pacman_direction)
-		{
-		case 0:
-		{
-			target.x += TAMANHO_DA_CELULA * GHOST_1_CHASE;
-
-			break;
-		}
-		case 1:
-		{
-			target.y -= TAMANHO_DA_CELULA * GHOST_1_CHASE;
-
-			break;
-		}
-		case 2:
-		{
-			target.x -= TAMANHO_DA_CELULA * GHOST_1_CHASE;
-
-			break;
-		}
-		case 3:
-		{
-			target.y += TAMANHO_DA_CELULA * GHOST_1_CHASE;
-		}
-		}
-
-		break;
-	}
-	case 2:
-	{
-		target = i_pacman_position;
-
-		switch (i_pacman_direction)
-		{
-		case 0:
-		{
-			target.x += TAMANHO_DA_CELULA * GHOST_2_CHASE;
-
-			break;
-		}
-		case 1:
-		{
-			target.y -= TAMANHO_DA_CELULA * GHOST_2_CHASE;
-
-			break;
-		}
-		case 2:
-		{
-			target.x -= TAMANHO_DA_CELULA * GHOST_2_CHASE;
-
-			break;
-		}
-		case 3:
-		{
-			target.y += TAMANHO_DA_CELULA * GHOST_2_CHASE;
-		}
-		}
-
-		target.x += target.x - i_ghost_0_position.x;
-		target.y += target.y - i_ghost_0_position.y;
-
-		break;
-	}
-	case 3: 
-	{
-		if (TAMANHO_DA_CELULA * GHOST_3_CHASE <= sqrt(pow(position.x - i_pacman_position.x, 2) + pow(position.y - i_pacman_position.y, 2)))
-		{
-			target = i_pacman_position;
-		}
-		else
-		{
-			target = { 0, TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
+				target = home_exit; 
+			}
 		}
 	}
+	else
+	{
+		if (0 == movement_mode)
+		{
+			switch (id)
+			{
+			case 0:
+			{
+				target = { TAMANHO_DA_CELULA * (LARGURA_DO_MAPA - 1), 0 };
+
+				break;
+			}
+			case 1:
+			{
+				target = { 0, 0 };
+
+				break;
+			}
+			case 2:
+			{
+				target = { TAMANHO_DA_CELULA * (LARGURA_DO_MAPA - 1), TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
+
+				break;
+			}
+			case 3:
+			{
+				target = { 0, TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
+			}
+			}
+		}
+		else 
+		{
+			switch (id)
+			{
+			case 0:
+			{
+				target = i_pacman_position;
+
+				break;
+			}
+			case 1: 
+			{
+				target = i_pacman_position;
+
+				switch (i_pacman_direction)
+				{
+				case 0:
+				{
+					target.x += TAMANHO_DA_CELULA * GHOST_1_CHASE;
+
+					break;
+				}
+				case 1:
+				{
+					target.y -= TAMANHO_DA_CELULA * GHOST_1_CHASE;
+
+					break;
+				}
+				case 2:
+				{
+					target.x -= TAMANHO_DA_CELULA * GHOST_1_CHASE;
+
+					break;
+				}
+				case 3:
+				{
+					target.y += TAMANHO_DA_CELULA * GHOST_1_CHASE;
+				}
+				}
+
+				break;
+			}
+			case 2:
+			{
+				target = i_pacman_position;
+
+				switch (i_pacman_direction)
+				{
+				case 0:
+				{
+					target.x += TAMANHO_DA_CELULA * GHOST_2_CHASE;
+
+					break;
+				}
+				case 1:
+				{
+					target.y -= TAMANHO_DA_CELULA * GHOST_2_CHASE;
+
+					break;
+				}
+				case 2:
+				{
+					target.x -= TAMANHO_DA_CELULA * GHOST_2_CHASE;
+
+					break;
+				}
+				case 3:
+				{
+					target.y += TAMANHO_DA_CELULA * GHOST_2_CHASE;
+				}
+				}
+
+				target.x += target.x - i_ghost_0_position.x;
+				target.y += target.y - i_ghost_0_position.y;
+
+				break;
+			}
+			case 3: 
+			{
+				if (TAMANHO_DA_CELULA * GHOST_3_CHASE <= sqrt(pow(position.x - i_pacman_position.x, 2) + pow(position.y - i_pacman_position.y, 2)))
+				{
+					target = i_pacman_position;
+				}
+				else
+				{
+					target = { 0, TAMANHO_DA_CELULA * (ALTURA_DO_MAPA - 1) };
+				}
+			}
+			}
+		}
 	}
 }
+
