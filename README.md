@@ -4,6 +4,7 @@ Projeto simples, feito em *C++* com a biblioteca *SFML*, baseado na primeira fas
 Sinta-se a vontade para mexer e quem sabe até mesmo modificar o projeto!
 
 [Faça o download do executável (windows 11)](https://github.com/JelsonJr/Pacman/blob/master/Pacman.zip)
+<br/>
 [Faça o download do executável (windows 10)](https://github.com/JelsonJr/Pacman/blob/master/Pacman_W10.zip)
 
 <div style="display: flex; justify-content: center; align-items: center;">
